@@ -1,4 +1,4 @@
-package com.server.main;
+package com.server.main.helloworld;
 
 public class HelloWorldBean 
 {

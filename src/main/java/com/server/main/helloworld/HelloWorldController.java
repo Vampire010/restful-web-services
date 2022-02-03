@@ -1,6 +1,7 @@
-package com.server.main;
+package com.server.main.helloworld;
 
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;  
 import org.springframework.web.bind.annotation.RequestMethod;  
 import org.springframework.web.bind.annotation.RestController;  
@@ -19,4 +20,12 @@ public class HelloWorldController
 	{  
 		return new HelloWorldBean("Hello World"); //constructor of HelloWorldBean  
 	}  
+	
+	@GetMapping(path="/hello-world-bean/path-variable/{name}")  
+	public HelloWorldBean helloWorldPathVariable(@PathVariable String name)  
+	{  
+		return new HelloWorldBean(String.format("Hello World, %s" ,  name)); //constructor of HelloWorldBean  
+	}  
+	
+	
 }  

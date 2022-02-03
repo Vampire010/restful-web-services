@@ -9,6 +9,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController  
 public class HelloWorldController   
 {  
+	//White label Error
+	private static final String PATH = "/error";
+	public String error()
+	{
+		return "Error handling";
+	}
+	public String getErrorPath()
+	{
+		return PATH;
+	}
+	
 	//using get method and hello-world as URI  
 	@GetMapping(path="/hello-world")  
 	public String helloWorld()  

@@ -2,8 +2,10 @@ package com.server.main;
 
 import java.util.Date;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.support.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,5 +23,10 @@ public class CustomizedResponceEntityExceptionHandler extends ResponseEntityExce
 	{
 		ExceptionResponse exceptionResponce = new ExceptionResponse(new Date(),ex.getMessage(),request.getDescription(false));
 		return new ResponseEntity(exceptionResponce,HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,HttpHeaders headers ,HttpStatus status,WebRequest request)
+	{
+		return handleExceptionInternal(ex, null, headers, status, request);
 	}
 }

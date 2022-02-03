@@ -1,20 +1,20 @@
 package com.server.main.user;
 
 import java.net.URI;
-import java.util.Date;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.hateoas.Resource;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+import static  org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
@@ -43,30 +43,31 @@ public class UserResource
 	
 	//Get Specific User
 	@GetMapping("/users/{id}")
-	public User retriveUser(@PathVariable int id)
+	public Resource<User> retriveUser(@PathVariable int id)
 	{
 		User user=service.findOne(id);
 		if(user==null)
-		{
-			//Handling Exception
 			throw new UserNotFoundException("id - " + id);
-		}
 		
-		return service.findOne(id);
-		
-		
+		Resource<User> resource = new Resource<User>(user);
+		//add link
+		ControllerLinkBuilder linkTo = linkTo(methodOn(this.getClass()).retriveAllUsers());
+		resource.add(linkTo.withRel("all-users"));
+		return resource;
 	}
 	
+
 	//URI LOCATION
 	//Create User 
 	@PostMapping("/users")
-	public  ResponseEntity<Object> createUser(@RequestBody User user)
+	public  User createUser(@RequestBody User user)
 	{
 		User savedUser=service.save(user);
-		URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
-				.buildAndExpand(savedUser.getId()).toUri();
+		/* URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+				.buildAndExpand(savedUser.getId()).toUri(); 
 		
-		return ResponseEntity.created(location).build();
+		return ResponseEntity.created(location).build(); */
+				return savedUser;
 	}
 	@DeleteMapping("/users/{id}")
 	public void deleteUser(@PathVariable int id)
@@ -93,5 +94,7 @@ public class UserResource
 			return service.save(savedUser);
 			
 		}
+		
+		
 
 }
